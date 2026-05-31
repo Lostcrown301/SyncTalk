@@ -10,5 +10,8 @@ __pycache__/
 *.db
 
 #Test files
-
 app/authentication/password_test.py
+
+# Structure
+
+structure.md

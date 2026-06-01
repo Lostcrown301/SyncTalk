@@ -10,8 +10,16 @@ __pycache__/
 *.db
 
 #Test files
-app/authentication/password_test.py
+app/tests/password_test.py
+app/tests/jwt_test.py
 
 # Structure
 
 structure.md
+
+# enviroment files
+
+.env
+######################################
+
+helper.py

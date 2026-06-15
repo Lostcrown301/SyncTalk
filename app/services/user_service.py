@@ -1,6 +1,9 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
+from app.auth.password import verify_password
+from app.auth.jwt_handler import create_access_token
+
 from app.database.models.user import User
 from app.auth.password import hash_password
 
@@ -44,3 +47,39 @@ def create_user(
     db.refresh(user)
 
     return user
+
+def login_user(
+    db: Session,
+    email: str,
+    password: str
+):
+    user = db.query(User).filter(
+        User.email == email
+    ).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+
+    if not verify_password(
+        password,
+        user.hashed_password
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+
+    access_token = create_access_token(
+        {
+            "sub": str(user.id),
+            "email": user.email
+        }
+    )
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
